@@ -1,0 +1,180 @@
+{
+  "$defs": {
+    "Scene": {
+      "description": "One detected shot. The AI Director reasons over these, not raw frames.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "index": {
+          "default": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "start": {
+          "default": 0.0,
+          "title": "Start",
+          "type": "number"
+        },
+        "end": {
+          "default": 0.0,
+          "title": "End",
+          "type": "number"
+        },
+        "thumbnail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Thumbnail"
+        },
+        "motion_score": {
+          "default": 0.0,
+          "title": "Motion Score",
+          "type": "number"
+        },
+        "brightness": {
+          "default": 0.0,
+          "title": "Brightness",
+          "type": "number"
+        },
+        "contrast": {
+          "default": 0.0,
+          "title": "Contrast",
+          "type": "number"
+        },
+        "colorfulness": {
+          "default": 0.0,
+          "title": "Colorfulness",
+          "type": "number"
+        },
+        "quality_score": {
+          "default": 0.0,
+          "title": "Quality Score",
+          "type": "number"
+        },
+        "energy_score": {
+          "default": 0.0,
+          "title": "Energy Score",
+          "type": "number"
+        },
+        "audio_rms": {
+          "default": 0.0,
+          "title": "Audio Rms",
+          "type": "number"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "shot_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Shot Type"
+        },
+        "subjects": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Subjects",
+          "type": "array"
+        }
+      },
+      "title": "Scene",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "scenes": {
+      "items": {
+        "$ref": "#/$defs/Scene"
+      },
+      "title": "Scenes",
+      "type": "array"
+    },
+    "loudness_lufs": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Loudness Lufs"
+    },
+    "peak_db": {
+      "anyOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Peak Db"
+    },
+    "silences": {
+      "items": {
+        "additionalProperties": {
+          "type": "number"
+        },
+        "type": "object"
+      },
+      "title": "Silences",
+      "type": "array"
+    },
+    "highlights": {
+      "items": {
+        "additionalProperties": true,
+        "type": "object"
+      },
+      "title": "Highlights",
+      "type": "array"
+    },
+    "analyzed_at": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Analyzed At"
+    },
+    "analyzer_version": {
+      "default": 1,
+      "title": "Analyzer Version",
+      "type": "integer"
+    }
+  },
+  "title": "MediaAnalysis",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://makma.dev/schema/media-analysis.schema.json"
+}

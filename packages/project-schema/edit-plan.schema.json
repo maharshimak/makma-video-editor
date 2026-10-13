@@ -1,0 +1,303 @@
+{
+  "$defs": {
+    "CostEstimate": {
+      "properties": {
+        "tier": {
+          "default": "light",
+          "enum": [
+            "instant",
+            "light",
+            "moderate",
+            "heavy"
+          ],
+          "title": "Tier",
+          "type": "string"
+        },
+        "seconds": {
+          "default": 0.0,
+          "title": "Seconds",
+          "type": "number"
+        },
+        "gpu_seconds": {
+          "default": 0.0,
+          "title": "Gpu Seconds",
+          "type": "number"
+        },
+        "usd": {
+          "default": 0.0,
+          "title": "Usd",
+          "type": "number"
+        },
+        "notes": {
+          "default": "",
+          "title": "Notes",
+          "type": "string"
+        }
+      },
+      "title": "CostEstimate",
+      "type": "object"
+    },
+    "EditOperation": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/$defs/OpType"
+        },
+        "scope": {
+          "$ref": "#/$defs/Scope"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        },
+        "description": {
+          "default": "",
+          "title": "Description",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "EditOperation",
+      "type": "object"
+    },
+    "ExportRequest": {
+      "description": "A render the plan asks for.\n\nExports are not timeline operations -- they do not change project state --\nso they travel beside the operations rather than inside them, and the API\nturns them into real jobs.",
+      "properties": {
+        "preset": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Preset"
+        },
+        "width": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Width"
+        },
+        "height": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Height"
+        },
+        "fps": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Fps"
+        },
+        "quality": {
+          "default": "final",
+          "title": "Quality",
+          "type": "string"
+        },
+        "label": {
+          "default": "",
+          "title": "Label",
+          "type": "string"
+        }
+      },
+      "title": "ExportRequest",
+      "type": "object"
+    },
+    "OpType": {
+      "enum": [
+        "add_clip",
+        "delete_clip",
+        "move_clip",
+        "trim_clip",
+        "split_clip",
+        "duplicate_clip",
+        "remove_range",
+        "reorder",
+        "set_track",
+        "set_keyframes",
+        "set_duration",
+        "set_speed",
+        "set_volume",
+        "set_transform",
+        "set_enabled",
+        "add_effect",
+        "update_effect",
+        "remove_effect",
+        "set_transition",
+        "add_text",
+        "add_marker",
+        "set_format",
+        "create_sequence",
+        "segment_subject",
+        "remove_object",
+        "replace_background",
+        "generate_broll",
+        "relight",
+        "auto_caption",
+        "beat_sync"
+      ],
+      "title": "OpType",
+      "type": "string"
+    },
+    "Scope": {
+      "description": "What an operation applies to.\n\nResolution order: explicit clip_ids > track_ids+range > range > selection\n> all. An unresolvable scope is an error, never a silent no-op.",
+      "properties": {
+        "type": {
+          "default": "selection",
+          "enum": [
+            "clip",
+            "track",
+            "range",
+            "selection",
+            "all",
+            "sequence"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "clip_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Clip Ids",
+          "type": "array"
+        },
+        "track_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Track Ids",
+          "type": "array"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "kinds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Kinds",
+          "type": "array"
+        }
+      },
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "description": "The AI Director's answer to a user instruction.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "command": {
+      "default": "",
+      "title": "Command",
+      "type": "string"
+    },
+    "summary": {
+      "default": "",
+      "title": "Summary",
+      "type": "string"
+    },
+    "rationale": {
+      "default": "",
+      "title": "Rationale",
+      "type": "string"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/EditOperation"
+      },
+      "title": "Operations",
+      "type": "array"
+    },
+    "estimate": {
+      "$ref": "#/$defs/CostEstimate"
+    },
+    "exports": {
+      "items": {
+        "$ref": "#/$defs/ExportRequest"
+      },
+      "title": "Exports",
+      "type": "array"
+    },
+    "unsupported": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unsupported",
+      "type": "array"
+    },
+    "requires_confirmation": {
+      "default": false,
+      "title": "Requires Confirmation",
+      "type": "boolean"
+    },
+    "planner": {
+      "default": "heuristic",
+      "title": "Planner",
+      "type": "string"
+    },
+    "warnings": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Warnings",
+      "type": "array"
+    }
+  },
+  "title": "EditPlan",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://makma.dev/schema/edit-plan.schema.json"
+}

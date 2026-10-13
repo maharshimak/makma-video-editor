@@ -1,0 +1,134 @@
+{
+  "$defs": {
+    "OpType": {
+      "enum": [
+        "add_clip",
+        "delete_clip",
+        "move_clip",
+        "trim_clip",
+        "split_clip",
+        "duplicate_clip",
+        "remove_range",
+        "reorder",
+        "set_track",
+        "set_keyframes",
+        "set_duration",
+        "set_speed",
+        "set_volume",
+        "set_transform",
+        "set_enabled",
+        "add_effect",
+        "update_effect",
+        "remove_effect",
+        "set_transition",
+        "add_text",
+        "add_marker",
+        "set_format",
+        "create_sequence",
+        "segment_subject",
+        "remove_object",
+        "replace_background",
+        "generate_broll",
+        "relight",
+        "auto_caption",
+        "beat_sync"
+      ],
+      "title": "OpType",
+      "type": "string"
+    },
+    "Scope": {
+      "description": "What an operation applies to.\n\nResolution order: explicit clip_ids > track_ids+range > range > selection\n> all. An unresolvable scope is an error, never a silent no-op.",
+      "properties": {
+        "type": {
+          "default": "selection",
+          "enum": [
+            "clip",
+            "track",
+            "range",
+            "selection",
+            "all",
+            "sequence"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "clip_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Clip Ids",
+          "type": "array"
+        },
+        "track_ids": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Track Ids",
+          "type": "array"
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Start"
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "End"
+        },
+        "kinds": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Kinds",
+          "type": "array"
+        }
+      },
+      "title": "Scope",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "type": {
+      "$ref": "#/$defs/OpType"
+    },
+    "scope": {
+      "$ref": "#/$defs/Scope"
+    },
+    "parameters": {
+      "additionalProperties": true,
+      "title": "Parameters",
+      "type": "object"
+    },
+    "description": {
+      "default": "",
+      "title": "Description",
+      "type": "string"
+    }
+  },
+  "required": [
+    "type"
+  ],
+  "title": "EditOperation",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://makma.dev/schema/edit-operation.schema.json"
+}

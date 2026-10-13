@@ -1,0 +1,94 @@
+# Local development stack.
+#
+# The editor runs without any of this -- SQLite plus the local filesystem is
+# the zero-infrastructure default. Bring this up when you want the shape of
+# production: Postgres, Redis, S3-compatible storage, and render workers that
+# scale independently of the API.
+#
+#   docker compose up -d
+#   cp .env.example .env   (then uncomment the Postgres/Redis/S3 lines)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: makma
+      POSTGRES_PASSWORD: makma
+      POSTGRES_DB: makma
+    ports: ["5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U makma"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["6379:6379"]
+    volumes: ["redis-data:/data"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  minio:
+    image: minio/minio:latest
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: makma
+      MINIO_ROOT_PASSWORD: makma-secret
+    ports: ["9000:9000", "9001:9001"]
+    volumes: ["minio-data:/data"]
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 8s
+      timeout: 4s
+      retries: 20
+
+  api:
+    build:
+      context: .
+      dockerfile: infrastructure/api.Dockerfile
+    environment:
+      MAKMA_DATABASE_URL: postgresql+psycopg://makma:makma@postgres:5432/makma
+      MAKMA_REDIS_URL: redis://redis:6379/0
+      MAKMA_DATA_DIR: /data
+      # The API serves requests; rendering belongs to the workers.
+      MAKMA_INLINE_WORKER: "false"
+      MAKMA_SECRET_KEY: ${MAKMA_SECRET_KEY:-dev-insecure-change-me}
+      MAKMA_ANTHROPIC_API_KEY: ${MAKMA_ANTHROPIC_API_KEY:-}
+    ports: ["8000:8000"]
+    volumes: ["media-data:/data"]
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    command: >
+      uvicorn makma.main:app --host 0.0.0.0 --port 8000
+
+  worker:
+    build:
+      context: .
+      dockerfile: infrastructure/api.Dockerfile
+    environment:
+      MAKMA_DATABASE_URL: postgresql+psycopg://makma:makma@postgres:5432/makma
+      MAKMA_REDIS_URL: redis://redis:6379/0
+      MAKMA_DATA_DIR: /data
+      MAKMA_WORKER_CONCURRENCY: "2"
+      MAKMA_SECRET_KEY: ${MAKMA_SECRET_KEY:-dev-insecure-change-me}
+      MAKMA_ANTHROPIC_API_KEY: ${MAKMA_ANTHROPIC_API_KEY:-}
+    # Media work is CPU-bound; scale this service, not the API.
+    deploy:
+      replicas: 2
+    volumes: ["media-data:/data"]
+    depends_on:
+      postgres: { condition: service_healthy }
+    command: python -m makma.jobs.worker
+
+volumes:
+  postgres-data:
+  redis-data:
+  minio-data:
+  media-data:

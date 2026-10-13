@@ -1,0 +1,634 @@
+{
+  "$defs": {
+    "Clip": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/ClipKind"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "asset_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Asset Id"
+        },
+        "start": {
+          "default": 0.0,
+          "title": "Start",
+          "type": "number"
+        },
+        "duration": {
+          "default": 1.0,
+          "title": "Duration",
+          "type": "number"
+        },
+        "in_point": {
+          "default": 0.0,
+          "title": "In Point",
+          "type": "number"
+        },
+        "speed": {
+          "default": 1.0,
+          "title": "Speed",
+          "type": "number"
+        },
+        "reverse": {
+          "default": false,
+          "title": "Reverse",
+          "type": "boolean"
+        },
+        "volume": {
+          "default": 1.0,
+          "title": "Volume",
+          "type": "number"
+        },
+        "muted": {
+          "default": false,
+          "title": "Muted",
+          "type": "boolean"
+        },
+        "transform": {
+          "$ref": "#/$defs/Transform"
+        },
+        "effects": {
+          "items": {
+            "$ref": "#/$defs/Effect"
+          },
+          "title": "Effects",
+          "type": "array"
+        },
+        "transition_in": {
+          "$ref": "#/$defs/Transition"
+        },
+        "transition_out": {
+          "$ref": "#/$defs/Transition"
+        },
+        "text": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/TextContent"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Color"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "locked": {
+          "default": false,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "label_color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label Color"
+        },
+        "meta": {
+          "additionalProperties": true,
+          "title": "Meta",
+          "type": "object"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Clip",
+      "type": "object"
+    },
+    "ClipKind": {
+      "enum": [
+        "video",
+        "audio",
+        "image",
+        "text",
+        "solid",
+        "adjustment"
+      ],
+      "title": "ClipKind",
+      "type": "string"
+    },
+    "Easing": {
+      "enum": [
+        "linear",
+        "ease_in",
+        "ease_out",
+        "ease_in_out",
+        "hold"
+      ],
+      "title": "Easing",
+      "type": "string"
+    },
+    "Effect": {
+      "description": "A non-destructive operation applied to a clip or adjustment layer.\n\n`type` selects the implementation in the render engine registry; the\nengine validates parameters, not this schema, so new effects can ship\nwithout a schema migration.",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "type": {
+          "title": "Type",
+          "type": "string"
+        },
+        "enabled": {
+          "default": true,
+          "title": "Enabled",
+          "type": "boolean"
+        },
+        "parameters": {
+          "additionalProperties": true,
+          "title": "Parameters",
+          "type": "object"
+        },
+        "keyframes": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Keyframe"
+            },
+            "type": "array"
+          },
+          "title": "Keyframes",
+          "type": "object"
+        },
+        "label": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Label"
+        },
+        "created_by": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Created By"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "Effect",
+      "type": "object"
+    },
+    "FitMode": {
+      "enum": [
+        "contain",
+        "cover",
+        "stretch",
+        "none"
+      ],
+      "title": "FitMode",
+      "type": "string"
+    },
+    "Keyframe": {
+      "description": "A single animated value at a point in *clip-local* time (seconds).",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "time": {
+          "default": 0.0,
+          "title": "Time",
+          "type": "number"
+        },
+        "value": {
+          "default": 0.0,
+          "title": "Value",
+          "type": "number"
+        },
+        "easing": {
+          "$ref": "#/$defs/Easing",
+          "default": "ease_in_out"
+        }
+      },
+      "title": "Keyframe",
+      "type": "object"
+    },
+    "Marker": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "time": {
+          "title": "Time",
+          "type": "number"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "color": {
+          "default": "#E4B33B",
+          "title": "Color",
+          "type": "string"
+        },
+        "kind": {
+          "default": "generic",
+          "title": "Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "time"
+      ],
+      "title": "Marker",
+      "type": "object"
+    },
+    "TextContent": {
+      "properties": {
+        "text": {
+          "default": "TEXT",
+          "title": "Text",
+          "type": "string"
+        },
+        "style": {
+          "$ref": "#/$defs/TextStyle"
+        },
+        "anchor_x": {
+          "default": 0.5,
+          "title": "Anchor X",
+          "type": "number"
+        },
+        "anchor_y": {
+          "default": 0.5,
+          "title": "Anchor Y",
+          "type": "number"
+        },
+        "animation": {
+          "default": "fade",
+          "title": "Animation",
+          "type": "string"
+        }
+      },
+      "title": "TextContent",
+      "type": "object"
+    },
+    "TextStyle": {
+      "properties": {
+        "font_family": {
+          "default": "Inter",
+          "title": "Font Family",
+          "type": "string"
+        },
+        "font_size": {
+          "default": 72,
+          "title": "Font Size",
+          "type": "integer"
+        },
+        "color": {
+          "default": "#FFFFFF",
+          "title": "Color",
+          "type": "string"
+        },
+        "bold": {
+          "default": true,
+          "title": "Bold",
+          "type": "boolean"
+        },
+        "italic": {
+          "default": false,
+          "title": "Italic",
+          "type": "boolean"
+        },
+        "align": {
+          "default": "center",
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "title": "Align",
+          "type": "string"
+        },
+        "letter_spacing": {
+          "default": 0.0,
+          "title": "Letter Spacing",
+          "type": "number"
+        },
+        "line_height": {
+          "default": 1.2,
+          "title": "Line Height",
+          "type": "number"
+        },
+        "uppercase": {
+          "default": false,
+          "title": "Uppercase",
+          "type": "boolean"
+        },
+        "stroke_color": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Stroke Color"
+        },
+        "stroke_width": {
+          "default": 0.0,
+          "title": "Stroke Width",
+          "type": "number"
+        },
+        "shadow": {
+          "default": true,
+          "title": "Shadow",
+          "type": "boolean"
+        },
+        "background": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Background"
+        },
+        "background_padding": {
+          "default": 16,
+          "title": "Background Padding",
+          "type": "integer"
+        }
+      },
+      "title": "TextStyle",
+      "type": "object"
+    },
+    "Track": {
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "kind": {
+          "$ref": "#/$defs/TrackKind"
+        },
+        "name": {
+          "default": "",
+          "title": "Name",
+          "type": "string"
+        },
+        "index": {
+          "default": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "clips": {
+          "items": {
+            "$ref": "#/$defs/Clip"
+          },
+          "title": "Clips",
+          "type": "array"
+        },
+        "muted": {
+          "default": false,
+          "title": "Muted",
+          "type": "boolean"
+        },
+        "hidden": {
+          "default": false,
+          "title": "Hidden",
+          "type": "boolean"
+        },
+        "locked": {
+          "default": false,
+          "title": "Locked",
+          "type": "boolean"
+        },
+        "solo": {
+          "default": false,
+          "title": "Solo",
+          "type": "boolean"
+        },
+        "volume": {
+          "default": 1.0,
+          "title": "Volume",
+          "type": "number"
+        },
+        "is_adjustment": {
+          "default": false,
+          "title": "Is Adjustment",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "kind"
+      ],
+      "title": "Track",
+      "type": "object"
+    },
+    "TrackKind": {
+      "enum": [
+        "video",
+        "audio"
+      ],
+      "title": "TrackKind",
+      "type": "string"
+    },
+    "Transform": {
+      "properties": {
+        "x": {
+          "default": 0.0,
+          "title": "X",
+          "type": "number"
+        },
+        "y": {
+          "default": 0.0,
+          "title": "Y",
+          "type": "number"
+        },
+        "scale": {
+          "default": 1.0,
+          "title": "Scale",
+          "type": "number"
+        },
+        "rotation": {
+          "default": 0.0,
+          "title": "Rotation",
+          "type": "number"
+        },
+        "opacity": {
+          "default": 1.0,
+          "title": "Opacity",
+          "type": "number"
+        },
+        "fit": {
+          "$ref": "#/$defs/FitMode",
+          "default": "contain"
+        },
+        "crop_left": {
+          "default": 0.0,
+          "title": "Crop Left",
+          "type": "number"
+        },
+        "crop_right": {
+          "default": 0.0,
+          "title": "Crop Right",
+          "type": "number"
+        },
+        "crop_top": {
+          "default": 0.0,
+          "title": "Crop Top",
+          "type": "number"
+        },
+        "crop_bottom": {
+          "default": 0.0,
+          "title": "Crop Bottom",
+          "type": "number"
+        },
+        "keyframes": {
+          "additionalProperties": {
+            "items": {
+              "$ref": "#/$defs/Keyframe"
+            },
+            "type": "array"
+          },
+          "title": "Keyframes",
+          "type": "object"
+        }
+      },
+      "title": "Transform",
+      "type": "object"
+    },
+    "Transition": {
+      "properties": {
+        "type": {
+          "$ref": "#/$defs/TransitionType",
+          "default": "none"
+        },
+        "duration": {
+          "default": 0.5,
+          "title": "Duration",
+          "type": "number"
+        }
+      },
+      "title": "Transition",
+      "type": "object"
+    },
+    "TransitionType": {
+      "enum": [
+        "none",
+        "fade",
+        "dissolve",
+        "wipe_left",
+        "wipe_right",
+        "slide_left",
+        "slide_right",
+        "slide_up",
+        "slide_down"
+      ],
+      "title": "TransitionType",
+      "type": "string"
+    }
+  },
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "default": "Main",
+      "title": "Name",
+      "type": "string"
+    },
+    "width": {
+      "default": 1920,
+      "title": "Width",
+      "type": "integer"
+    },
+    "height": {
+      "default": 1080,
+      "title": "Height",
+      "type": "integer"
+    },
+    "fps": {
+      "default": 30.0,
+      "title": "Fps",
+      "type": "number"
+    },
+    "sample_rate": {
+      "default": 48000,
+      "title": "Sample Rate",
+      "type": "integer"
+    },
+    "background": {
+      "default": "#000000",
+      "title": "Background",
+      "type": "string"
+    },
+    "tracks": {
+      "items": {
+        "$ref": "#/$defs/Track"
+      },
+      "title": "Tracks",
+      "type": "array"
+    },
+    "markers": {
+      "items": {
+        "$ref": "#/$defs/Marker"
+      },
+      "title": "Markers",
+      "type": "array"
+    }
+  },
+  "title": "Sequence",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://makma.dev/schema/sequence.schema.json"
+}

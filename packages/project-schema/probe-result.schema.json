@@ -1,0 +1,172 @@
+{
+  "$defs": {
+    "AudioStreamInfo": {
+      "properties": {
+        "index": {
+          "default": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "codec": {
+          "default": "",
+          "title": "Codec",
+          "type": "string"
+        },
+        "sample_rate": {
+          "default": 0,
+          "title": "Sample Rate",
+          "type": "integer"
+        },
+        "channels": {
+          "default": 0,
+          "title": "Channels",
+          "type": "integer"
+        },
+        "duration": {
+          "default": 0.0,
+          "title": "Duration",
+          "type": "number"
+        },
+        "bit_rate": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bit Rate"
+        }
+      },
+      "title": "AudioStreamInfo",
+      "type": "object"
+    },
+    "VideoStreamInfo": {
+      "properties": {
+        "index": {
+          "default": 0,
+          "title": "Index",
+          "type": "integer"
+        },
+        "codec": {
+          "default": "",
+          "title": "Codec",
+          "type": "string"
+        },
+        "width": {
+          "default": 0,
+          "title": "Width",
+          "type": "integer"
+        },
+        "height": {
+          "default": 0,
+          "title": "Height",
+          "type": "integer"
+        },
+        "fps": {
+          "default": 0.0,
+          "title": "Fps",
+          "type": "number"
+        },
+        "duration": {
+          "default": 0.0,
+          "title": "Duration",
+          "type": "number"
+        },
+        "bit_rate": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bit Rate"
+        },
+        "pix_fmt": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Pix Fmt"
+        },
+        "rotation": {
+          "default": 0,
+          "title": "Rotation",
+          "type": "integer"
+        },
+        "has_alpha": {
+          "default": false,
+          "title": "Has Alpha",
+          "type": "boolean"
+        }
+      },
+      "title": "VideoStreamInfo",
+      "type": "object"
+    }
+  },
+  "description": "Normalized output of ffprobe.",
+  "properties": {
+    "format_name": {
+      "default": "",
+      "title": "Format Name",
+      "type": "string"
+    },
+    "duration": {
+      "default": 0.0,
+      "title": "Duration",
+      "type": "number"
+    },
+    "size": {
+      "default": 0,
+      "title": "Size",
+      "type": "integer"
+    },
+    "bit_rate": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Bit Rate"
+    },
+    "video": {
+      "items": {
+        "$ref": "#/$defs/VideoStreamInfo"
+      },
+      "title": "Video",
+      "type": "array"
+    },
+    "audio": {
+      "items": {
+        "$ref": "#/$defs/AudioStreamInfo"
+      },
+      "title": "Audio",
+      "type": "array"
+    },
+    "tags": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Tags",
+      "type": "object"
+    }
+  },
+  "title": "ProbeResult",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://makma.dev/schema/probe-result.schema.json"
+}

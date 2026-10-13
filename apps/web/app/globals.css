@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    @apply bg-ink-950 text-ink-100 font-sans antialiased text-base;
+    /* An editor is a pointing-heavy tool; stray text selection fights it. */
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  input,
+  textarea,
+  [contenteditable] {
+    user-select: text;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-600 rounded-full border-2 border-solid;
+    border-color: transparent;
+    background-clip: padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-500;
+    background-clip: padding-box;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-1 ring-accent/70;
+  }
+}
+
+@layer components {
+  .panel {
+    @apply bg-ink-900 border border-ink-750/80 rounded-md;
+  }
+
+  .panel-header {
+    @apply flex items-center justify-between h-9 px-3 border-b border-ink-750/80
+           text-2xs font-semibold uppercase tracking-[0.13em] text-ink-400 shrink-0;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 h-7 px-2.5 rounded
+           text-xs font-medium text-ink-200 bg-ink-750 border border-ink-600/70
+           transition-colors duration-150 hover:bg-ink-700 hover:text-ink-100
+           disabled:opacity-40 disabled:pointer-events-none;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent border-transparent hover:bg-ink-800;
+  }
+
+  .btn-accent {
+    @apply bg-accent text-ink-950 border-accent/60 font-semibold
+           hover:bg-accent-soft hover:text-ink-950;
+  }
+
+  .btn-danger {
+    @apply hover:bg-danger/15 hover:text-danger hover:border-danger/40;
+  }
+
+  .field {
+    @apply w-full h-7 px-2 rounded bg-ink-850 border border-ink-700 text-xs
+           text-ink-100 placeholder:text-ink-400
+           focus:border-accent/60 focus:outline-none;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 h-5 px-1.5 rounded text-2xs font-medium
+           bg-ink-800 text-ink-300 border border-ink-700;
+  }
+
+  .label {
+    @apply text-2xs uppercase tracking-[0.1em] text-ink-400 font-medium;
+  }
+
+  .divider-x {
+    @apply h-px bg-ink-750/70;
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+
+  .checkerboard {
+    background-image:
+      linear-gradient(45deg, #16191e 25%, transparent 25%),
+      linear-gradient(-45deg, #16191e 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #16191e 75%),
+      linear-gradient(-45deg, transparent 75%, #16191e 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+    background-color: #0d1014;
+  }
+
+  .animate-in {
+    animation: fade-in 180ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .animate-pulse-soft {
+    animation: pulse-soft 1.8s ease-in-out infinite;
+  }
+
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.45; }
+  }
+}

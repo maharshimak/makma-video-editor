@@ -1,0 +1,19 @@
+{
+  "name": "makma-editz",
+  "version": "0.1.0",
+  "private": true,
+  "description": "AI-native creative operating system for video and photo editing.",
+  "scripts": {
+    "setup": "python tools/fetch-ffmpeg.py && npm --prefix apps/web install",
+    "dev": "npm --prefix apps/web run dev",
+    "dev:api": "python -m uvicorn makma.main:app --reload --app-dir apps/api --port 8000",
+    "worker": "python -m makma.jobs.worker",
+    "build": "npm --prefix apps/web run build",
+    "typecheck": "npm --prefix apps/web run typecheck",
+    "test": "python -m pytest -q",
+    "test:watch": "python -m pytest -q -x --ff",
+    "schema": "python -m makma.schema.export",
+    "stack": "docker compose up -d"
+  },
+  "engines": { "node": ">=20" }
+}
